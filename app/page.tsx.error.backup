@@ -1,0 +1,223 @@
+﻿'use client'
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { 
+  Rocket, 
+  Palette, 
+  Code2, 
+  Play, 
+  ArrowRight, 
+  Sparkles, 
+  Zap, 
+  CheckCircle2, 
+  Github, 
+  Layers 
+} from 'lucide-react';
+
+export default function AIWorkground() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-purple-200 overflow-x-hidden">
+      <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight cursor-pointer hover:scale-105 transition-transform">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-white shadow-lg">
+              <Sparkles size={18} fill="currentColor" />
+            </div>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600">
+              AIWorkground
+            </span>
+          </Link>
+
+          <div className="hidden md:flex items-center gap-8 font-medium text-slate-600">
+            <a href="#features" className="hover:text-purple-600 transition-colors">湲곕뒫 ?뚭컻</a>
+            <a href="#demo" className="hover:text-purple-600 transition-colors">?곕え</a>
+            <a href="#pricing" className="hover:text-purple-600 transition-colors">媛寃?/a>
+            <Link href="/playground" className="px-5 py-2 rounded-full bg-slate-900 text-white font-semibold hover:bg-purple-600 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 transform hover:-translate-y-0.5">
+              臾대즺濡??쒖옉?섍린
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-300/30 rounded-full blur-[100px] animate-float" />
+          <div className="absolute top-[20%] right-[-5%] w-[400px] h-[400px] bg-pink-300/30 rounded-full blur-[100px] animate-float-delayed" />
+          <div className="absolute bottom-[10%] left-[20%] w-[300px] h-[300px] bg-blue-300/30 rounded-full blur-[100px]" />
+          <div className="absolute inset-0 bg-grid-pattern opacity-[0.3]" />
+        </div>
+
+        <div className="max-w-5xl mx-auto text-center">
+          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-purple-100 shadow-sm mb-8 transform transition-all duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
+            </span>
+            <span className="text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              ?쇳븯硫댁꽌 ??? ?렕 AI ?앹궛???뚮젅?닿렇?쇱슫??            </span>
+          </div>
+
+          <h1 className={`text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.15] mb-6 transform transition-all duration-700 delay-100 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            AI濡??쇳븯怨?<br className="hidden md:block" />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+              ??댄꽣泥섎읆 利먭린?몄슂
+            </span>
+          </h1>
+
+          <p className={`text-xl text-slate-500 mb-10 max-w-2xl mx-auto transform transition-all duration-700 delay-200 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            留덉???쨌 ?붿옄??쨌 媛쒕컻???섎굹???뚮옯?쇱뿉?? <br />
+            AIWorkground??蹂듭옟???낅Т瑜?寃뚯엫泥섎읆 ?쎄퀬 ?щ??덇쾶 留뚮벊?덈떎.
+          </p>
+
+          <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 transform transition-all duration-700 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <Link href="/playground" className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-lg hover:shadow-xl hover:shadow-indigo-500/40 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 group">
+              臾대즺濡??쒖옉?섍린
+              <Rocket className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+            </Link>
+            <a href="#demo" className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold text-lg hover:bg-slate-50 hover:border-slate-300 hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2">
+              <Play className="w-5 h-5 fill-slate-700" />
+              ?곕え 蹂닿린
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 border-y border-slate-100 bg-white/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+            {[
+              { label: "?앹궛???μ긽", value: "300%", icon: Zap, color: "text-yellow-500" },
+              { label: "肄섑뀗痢??앹꽦", value: "1遺?, icon: Sparkles, color: "text-pink-500" },
+              { label: "?붿옄???꾩꽦", value: "30珥?, icon: Layers, color: "text-purple-500" },
+            ].map((stat, idx) => (
+              <div key={idx} className="flex flex-col items-center text-center p-4">
+                <stat.icon className={`w-8 h-8 mb-3 ${stat.color} animate-pulse`} />
+                <span className="text-4xl font-black text-slate-900 tracking-tight mb-1">{stat.value}</span>
+                <span className="text-slate-500 font-medium">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 px-6 relative" id="features">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">3媛吏 AI ?꾧뎄, ?섎굹???뚮옯??/h2>
+            <p className="text-slate-500 text-lg">媛?遺꾩빞蹂??꾨Ц媛 AI媛 ?뱀떊????먯씠 ?섏뼱?쒕┰?덈떎.</p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="group relative bg-white rounded-[2rem] p-8 shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-500 hover:-translate-y-2 border border-slate-100 overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-orange-100 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-500" />
+              <div className="relative z-10">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white mb-6 shadow-lg shadow-orange-500/30 group-hover:rotate-6 transition-transform duration-300">
+                  <Zap size={28} />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Marketing AI</h3>
+                <p className="text-slate-500 mb-6">肄섑뀗痢좊? 1遺?留뚯뿉 ?앹꽦?섍퀬<br/>?먮룞?뷀븯?몄슂.</p>
+                <ul className="space-y-3">
+                  {["AI 肄섑뀗痢??앹꽦", "SNS ?먮룞 ?ъ뒪??, "?ㅼ떆媛??몃젋??遺꾩꽍"].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-slate-700 font-medium">
+                      <CheckCircle2 size={20} className="text-orange-500" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="group relative bg-white rounded-[2rem] p-8 shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 hover:-translate-y-2 border border-slate-100 overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-100 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-500" />
+              <div className="relative z-10">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white mb-6 shadow-lg shadow-purple-500/30 group-hover:rotate-6 transition-transform duration-300">
+                  <Palette size={28} />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Design AI</h3>
+                <p className="text-slate-500 mb-6">?붿옄?몄쓣 30珥?留뚯뿉 ?꾩꽦?섍퀬<br/>?쒖븞諛쏆쑝?몄슂.</p>
+                <ul className="space-y-3">
+                  {["Figma ?뚮윭洹몄씤 ?곕룞", "AI 留욎땄 ?붿옄???쒖븞", "?ㅼ떆媛?? ?묒뾽"].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-slate-700 font-medium">
+                      <CheckCircle2 size={20} className="text-purple-500" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="group relative bg-white rounded-[2rem] p-8 shadow-xl hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 hover:-translate-y-2 border border-slate-100 overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-100 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-500" />
+              <div className="relative z-10">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white mb-6 shadow-lg shadow-emerald-500/30 group-hover:rotate-6 transition-transform duration-300">
+                  <Code2 size={28} />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Developer AI</h3>
+                <p className="text-slate-500 mb-6">肄붾뱶 由щ럭? 臾몄꽌?붾?<br/>利됱떆 泥섎━?섏꽭??</p>
+                <ul className="space-y-3">
+                  {["GitHub App ?듯빀", "?먮룞 肄붾뱶 由щ럭 & ?섏젙", "PR 硫붿떆吏 ?먮룞??].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-slate-700 font-medium">
+                      <CheckCircle2 size={20} className="text-emerald-500" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-6" id="demo">
+        <div className="max-w-4xl mx-auto">
+          <div className="relative rounded-3xl overflow-hidden bg-slate-900 text-white p-12 text-center shadow-2xl">
+            <div className="absolute top-0 left-0 w-full h-full opacity-30">
+               <div className="absolute top-[-50%] left-[-20%] w-[500px] h-[500px] bg-indigo-500 rounded-full blur-[120px]" />
+               <div className="absolute bottom-[-50%] right-[-20%] w-[500px] h-[500px] bg-pink-500 rounded-full blur-[120px]" />
+            </div>
+
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-5xl font-bold mb-6">吏湲?諛붾줈 ?쒖옉?섏꽭??/h2>
+              <p className="text-slate-300 text-lg mb-10 max-w-xl mx-auto">
+                臾대즺 ?뚮옖?쇰줈 AIWorkground??紐⑤뱺 湲곕뒫??泥댄뿕?대낫?몄슂. <br/>
+                ?좎슜移대뱶 ?깅줉 ?놁씠 諛붾줈 ?쒖옉?????덉뒿?덈떎.
+              </p>
+              <Link href="/playground" className="inline-flex items-center px-10 py-5 rounded-full bg-white text-slate-900 font-bold text-lg hover:scale-105 transition-all duration-300 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] group">
+                臾대즺濡??쒖옉?섍린 
+                <ArrowRight className="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="py-12 px-6 border-t border-slate-100 bg-white">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-2 font-bold text-lg text-slate-700">
+             <div className="w-6 h-6 rounded bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center text-white">
+               <Sparkles size={14} fill="currentColor" />
+             </div>
+             AIWorkground
+          </div>
+          <div className="text-slate-400 text-sm">
+            짤 2024 AIWorkground. Work smart, Play hard.
+          </div>
+          <div className="flex gap-4">
+            <a href="https://github.com/aiworkground" target="_blank" rel="noopener noreferrer">
+              <Github className="w-5 h-5 text-slate-400 hover:text-slate-900 cursor-pointer transition-colors" />
+            </a>
+            <div className="w-5 h-5 rounded-full bg-slate-200 hover:bg-slate-900 cursor-pointer transition-colors" />
+            <div className="w-5 h-5 rounded-full bg-slate-200 hover:bg-slate-900 cursor-pointer transition-colors" />
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}

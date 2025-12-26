@@ -1,0 +1,179 @@
+﻿'use client'
+
+import { useUser } from '@clerk/nextjs'
+import { Activity, FileText, Users, TrendingUp, Zap, Palette, Code2 } from 'lucide-react'
+import Link from 'next/link'
+
+export default function DashboardPage() {
+  const { user } = useUser()
+
+  const stats = [
+    { label: '생성된 콘텐츠', value: '127', change: '+12%', icon: FileText, color: 'orange' },
+    { label: '활성 프로젝트', value: '8', change: '+3', icon: Activity, color: 'purple' },
+    { label: '팀 멤버', value: '12', change: '+2', icon: Users, color: 'blue' },
+    { label: '완료율', value: '94%', change: '+5%', icon: TrendingUp, color: 'green' },
+  ]
+
+  const quickActions = [
+    { 
+      title: 'Marketing AI', 
+      description: '콘텐츠 생성',
+      icon: Zap,
+      href: '/playground?type=marketing',
+      gradient: 'from-blue-500 to-purple-500'
+    },
+    { 
+      title: 'Design AI', 
+      description: '디자인 제안',
+      icon: Palette,
+      href: '/playground?type=design',
+      gradient: 'from-purple-500 to-pink-500'
+    },
+    { 
+      title: 'Developer AI', 
+      description: '코드 리뷰',
+      icon: Code2,
+      href: '/playground?type=code',
+      gradient: 'from-pink-500 to-red-500'
+    },
+  ]
+
+  const recentActivities = [
+    { id: 1, type: 'marketing', title: '블로그 포스트 생성', time: '5분 전' },
+    { id: 2, type: 'design', title: 'Figma 디자인 제안', time: '1시간 전' },
+    { id: 3, type: 'code', title: 'GitHub PR 자동 리뷰', time: '3시간 전' },
+    { id: 4, type: 'marketing', title: 'SNS 포스팅 예약', time: '어제' },
+  ]
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      {/* 사이드바 */}
+      <div className="fixed left-0 top-0 h-full w-64 bg-white shadow-xl p-6">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-xl">AI</span>
+          </div>
+          <span className="text-xl font-bold">AIWorkground</span>
+        </div>
+
+        <nav className="space-y-2">
+          <Link href="/dashboard" className="flex items-center gap-3 px-4 py-3 bg-purple-50 text-purple-600 rounded-lg font-semibold">
+            <Activity className="w-5 h-5" />
+            대시보드
+          </Link>
+          <Link href="/playground" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+            <Zap className="w-5 h-5" />
+            기능
+          </Link>
+          <Link href="/pricing" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+            <TrendingUp className="w-5 h-5" />
+            가격
+          </Link>
+
+          <div className="pt-6">
+            <p className="text-xs font-semibold text-gray-400 mb-2 px-4">AI 도구</p>
+            <Link href="/playground?type=marketing" className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+              <Zap className="w-4 h-4" />
+              Marketing AI
+            </Link>
+            <Link href="/playground?type=design" className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+              <Palette className="w-4 h-4" />
+              Design AI
+            </Link>
+            <Link href="/playground?type=code" className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+              <Code2 className="w-4 h-4" />
+              Developer AI
+            </Link>
+          </div>
+
+          <div className="pt-6">
+            <Link href="/dashboard/settings" className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+              <Users className="w-4 h-4" />
+              설정
+            </Link>
+          </div>
+        </nav>
+      </div>
+
+      {/* 메인 콘텐츠 */}
+      <div className="ml-64 p-8">
+        {/* 헤더 */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">환영합니다! 👋</h1>
+            <p className="text-gray-600">AIWorkground에서 생산성을 극대화하세요.</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <button className="p-2 hover:bg-white rounded-lg transition-all">
+              🔍
+            </button>
+            <button className="p-2 hover:bg-white rounded-lg transition-all">
+              🔔
+            </button>
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+              {user?.firstName?.[0] || 'U'}
+            </div>
+          </div>
+        </div>
+
+        {/* 통계 카드 */}
+        <div className="grid grid-cols-4 gap-6 mb-8">
+          {stats.map((stat) => (
+            <div key={stat.label} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all">
+              <div className="flex items-center justify-between mb-4">
+                <div className={`w-12 h-12 bg-${stat.color}-100 rounded-xl flex items-center justify-center`}>
+                  <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
+                </div>
+                <span className="text-sm font-semibold text-green-600">{stat.change}</span>
+              </div>
+              <p className="text-3xl font-bold mb-1">{stat.value}</p>
+              <p className="text-sm text-gray-600">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* 빠른 시작 */}
+        <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 rounded-3xl p-8 mb-8 text-white">
+          <h2 className="text-2xl font-bold mb-2">빠른 시작</h2>
+          <p className="text-purple-100 mb-6">AI 도구를 사용하여 새로운 프로젝트를 시작하세요.</p>
+          
+          <div className="grid grid-cols-3 gap-4">
+            {quickActions.map((action) => (
+              <Link
+                key={action.title}
+                href={action.href}
+                className="bg-white/20 backdrop-blur-lg rounded-2xl p-6 hover:bg-white/30 transition-all group"
+              >
+                <div className={`w-12 h-12 bg-gradient-to-r ${action.gradient} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  <action.icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-bold mb-1">{action.title}</h3>
+                <p className="text-sm text-purple-100">{action.description}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* 최근 활동 */}
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <h2 className="text-xl font-bold mb-4">최근 활동</h2>
+          <div className="space-y-4">
+            {recentActivities.map((activity) => (
+              <div key={activity.id} className="flex items-center gap-4 p-4 hover:bg-gray-50 rounded-lg transition-all">
+                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                  {activity.type === 'marketing' && <Zap className="w-5 h-5 text-purple-600" />}
+                  {activity.type === 'design' && <Palette className="w-5 h-5 text-purple-600" />}
+                  {activity.type === 'code' && <Code2 className="w-5 h-5 text-purple-600" />}
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold">{activity.title}</p>
+                  <p className="text-sm text-gray-500">{activity.time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

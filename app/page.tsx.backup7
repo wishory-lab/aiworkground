@@ -1,0 +1,419 @@
+﻿'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { ArrowRight, Sparkles, Zap, Rocket, CheckCircle2, Globe } from 'lucide-react'
+
+type Language = 'ko' | 'en' | 'ja' | 'zh'
+
+const languages = [
+  { code: 'ko', name: '한국어', flag: '🇰🇷' },
+  { code: 'en', name: 'English', flag: '🇺🇸' },
+  { code: 'ja', name: '日本語', flag: '🇯🇵' },
+  { code: 'zh', name: '中文', flag: '🇨🇳' },
+]
+
+// 홈페이지 다국어 텍스트
+const homeTexts = {
+  ko: {
+    features: '기능 소개',
+    pricing: '가격',
+    login: '로그인',
+    getStarted: '시작하기',
+    badge: '일하면서 놀자! 🎪',
+    title1: 'AI로 일하고',
+    title2: '놀이터처럼 즐기세요',
+    subtitle: '마케팅 · 디자인 · 개발을 하나의 플랫폼에서. AIWorkground는 복잡한 업무를 게임처럼 쉽고 재미있게 만듭니다.',
+    startFree: '무료로 시작하기',
+    exploreFeatures: '기능 살펴보기',
+    stat1: '생산성 향상',
+    stat2: '콘텐츠 생성',
+    stat3: '디자인 완성',
+    featuresTitle: '세 가지 AI 도구',
+    marketingTitle: '마케팅 AI',
+    marketingDesc: '콘텐츠를 1분 만에 생성하고 자동화하세요.',
+    marketingFeature1: 'AI 콘텐츠 생성',
+    marketingFeature2: 'SNS 자동 포스팅',
+    marketingFeature3: '실시간 트렌드 분석',
+    designTitle: '디자인 AI',
+    designDesc: '디자인을 30초 만에 완성하세요.',
+    designFeature1: 'Figma 플러그인 연동',
+    designFeature2: 'AI 맞춤 디자인 제안',
+    designFeature3: '실시간 팀 협업',
+    codeTitle: '개발자 AI',
+    codeDesc: '코드 리뷰와 문서화를 즉시 처리하세요.',
+    codeFeature1: 'GitHub App 통합',
+    codeFeature2: '자동 코드 리뷰 & 수정',
+    codeFeature3: 'PR 메시지 자동화',
+    ctaTitle: '지금 바로 시작하세요',
+    ctaSubtitle: '무료로 시작하고, 언제든 업그레이드하세요.',
+    ctaButton: '무료로 시작하기',
+    footer: '© 2024 AIWorkground. All rights reserved.',
+  },
+  en: {
+    features: 'Features',
+    pricing: 'Pricing',
+    login: 'Login',
+    getStarted: 'Get Started',
+    badge: 'Work & Play! 🎪',
+    title1: 'Work with AI,',
+    title2: 'Enjoy like a Playground',
+    subtitle: 'Marketing · Design · Development in one platform. AIWorkground makes complex work as easy and fun as a game.',
+    startFree: 'Start for Free',
+    exploreFeatures: 'Explore Features',
+    stat1: 'Productivity Boost',
+    stat2: 'Content Creation',
+    stat3: 'Design Completion',
+    featuresTitle: 'Three AI Tools',
+    marketingTitle: 'Marketing AI',
+    marketingDesc: 'Generate and automate content in 1 minute.',
+    marketingFeature1: 'AI Content Generation',
+    marketingFeature2: 'Auto Social Posting',
+    marketingFeature3: 'Real-time Trend Analysis',
+    designTitle: 'Design AI',
+    designDesc: 'Complete designs in 30 seconds.',
+    designFeature1: 'Figma Plugin Integration',
+    designFeature2: 'AI Design Suggestions',
+    designFeature3: 'Real-time Team Collaboration',
+    codeTitle: 'Developer AI',
+    codeDesc: 'Instant code review and documentation.',
+    codeFeature1: 'GitHub App Integration',
+    codeFeature2: 'Auto Code Review & Fix',
+    codeFeature3: 'PR Message Automation',
+    ctaTitle: 'Get Started Now',
+    ctaSubtitle: 'Start for free, upgrade anytime.',
+    ctaButton: 'Start for Free',
+    footer: '© 2024 AIWorkground. All rights reserved.',
+  },
+  ja: {
+    features: '機能紹介',
+    pricing: '価格',
+    login: 'ログイン',
+    getStarted: '始める',
+    badge: '働いて遊ぼう! 🎪',
+    title1: 'AIで働き、',
+    title2: '遊び場のように楽しむ',
+    subtitle: 'マーケティング・デザイン・開発を一つのプラットフォームで。AIWorkgroundは複雑な業務をゲームのように簡単で楽しくします。',
+    startFree: '無料で始める',
+    exploreFeatures: '機能を見る',
+    stat1: '生産性向上',
+    stat2: 'コンテンツ作成',
+    stat3: 'デザイン完成',
+    featuresTitle: '3つのAIツール',
+    marketingTitle: 'マーケティングAI',
+    marketingDesc: '1分でコンテンツを生成・自動化。',
+    marketingFeature1: 'AIコンテンツ生成',
+    marketingFeature2: 'SNS自動投稿',
+    marketingFeature3: 'リアルタイムトレンド分析',
+    designTitle: 'デザインAI',
+    designDesc: '30秒でデザイン完成。',
+    designFeature1: 'Figmaプラグイン連携',
+    designFeature2: 'AIデザイン提案',
+    designFeature3: 'リアルタイムチーム協業',
+    codeTitle: '開発者AI',
+    codeDesc: 'コードレビューと文書化を即座に処理。',
+    codeFeature1: 'GitHub App統合',
+    codeFeature2: '自動コードレビュー＆修正',
+    codeFeature3: 'PRメッセージ自動化',
+    ctaTitle: '今すぐ始めましょう',
+    ctaSubtitle: '無料で始めて、いつでもアップグレード。',
+    ctaButton: '無料で始める',
+    footer: '© 2024 AIWorkground. All rights reserved.',
+  },
+  zh: {
+    features: '功能介绍',
+    pricing: '价格',
+    login: '登录',
+    getStarted: '开始',
+    badge: '工作与玩耍！🎪',
+    title1: '用AI工作，',
+    title2: '像游乐场一样享受',
+    subtitle: '营销·设计·开发在一个平台。AIWorkground让复杂的工作像游戏一样简单有趣。',
+    startFree: '免费开始',
+    exploreFeatures: '探索功能',
+    stat1: '生产力提升',
+    stat2: '内容创建',
+    stat3: '设计完成',
+    featuresTitle: '三个AI工具',
+    marketingTitle: '营销AI',
+    marketingDesc: '1分钟内生成和自动化内容。',
+    marketingFeature1: 'AI内容生成',
+    marketingFeature2: '自动社交发布',
+    marketingFeature3: '实时趋势分析',
+    designTitle: '设计AI',
+    designDesc: '30秒完成设计。',
+    designFeature1: 'Figma插件集成',
+    designFeature2: 'AI设计建议',
+    designFeature3: '实时团队协作',
+    codeTitle: '开发者AI',
+    codeDesc: '即时代码审查和文档化。',
+    codeFeature1: 'GitHub App集成',
+    codeFeature2: '自动代码审查和修复',
+    codeFeature3: 'PR消息自动化',
+    ctaTitle: '立即开始',
+    ctaSubtitle: '免费开始，随时升级。',
+    ctaButton: '免费开始',
+    footer: '© 2024 AIWorkground. 版权所有。',
+  },
+}
+
+export default function HomePage() {
+  const [isVisible, setIsVisible] = useState(false)
+  const [language, setLanguage] = useState<Language>('ko')
+  const [showLangMenu, setShowLangMenu] = useState(false)
+
+  const t = homeTexts[language]
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      {/* Navigation */}
+      <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 font-bold text-xl">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">AI</span>
+            </div>
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              AIWorkground
+            </span>
+          </Link>
+
+          <div className="hidden md:flex items-center gap-6">
+            <Link href="/features" className="text-gray-600 hover:text-purple-600 transition-colors">
+              {t.features}
+            </Link>
+            <Link href="/pricing" className="text-gray-600 hover:text-purple-600 transition-colors">
+              {t.pricing}
+            </Link>
+
+            {/* 언어 선택 드롭다운 */}
+            <div className="relative">
+              <button
+                onClick={() => setShowLangMenu(!showLangMenu)}
+                className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-purple-600 transition-colors rounded-lg hover:bg-gray-50"
+              >
+                <Globe className="w-4 h-4" />
+                <span className="text-xl">{languages.find(l => l.code === language)?.flag}</span>
+              </button>
+
+              {showLangMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-2">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        setLanguage(lang.code as Language)
+                        setShowLangMenu(false)
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors ${
+                        language === lang.code ? 'bg-purple-50 text-purple-600' : 'text-gray-700'
+                      }`}
+                    >
+                      <span className="text-xl">{lang.flag}</span>
+                      <span className="font-medium">{lang.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <Link
+              href="/sign-in"
+              className="px-4 py-2 text-gray-600 hover:text-purple-600 transition-colors"
+            >
+              {t.login}
+            </Link>
+            <Link
+              href="/playground"
+              className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all"
+            >
+              {t.getStarted}
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-lg mb-6">
+              <Sparkles className="w-4 h-4 text-purple-600" />
+              <span className="text-sm font-semibold text-gray-700">{t.badge}</span>
+            </div>
+
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                {t.title1}
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+                {t.title2}
+              </span>
+            </h1>
+
+            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              {t.subtitle}
+            </p>
+
+            <div className="flex items-center justify-center gap-4">
+              <Link
+                href="/playground"
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white rounded-lg font-bold text-lg hover:shadow-2xl transition-all flex items-center gap-2"
+              >
+                {t.startFree}
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link
+                href="/features"
+                className="px-8 py-4 bg-white text-gray-700 rounded-lg font-bold text-lg hover:shadow-lg transition-all"
+              >
+                {t.exploreFeatures}
+              </Link>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid md:grid-cols-3 gap-8 mt-20">
+            <div className="bg-white rounded-2xl p-8 shadow-xl text-center">
+              <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                300%
+              </div>
+              <div className="text-gray-600">{t.stat1}</div>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-xl text-center">
+              <div className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+                1{language === 'ko' ? '분' : language === 'ja' ? '分' : language === 'zh' ? '分钟' : 'min'}
+              </div>
+              <div className="text-gray-600">{t.stat2}</div>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-xl text-center">
+              <div className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent mb-2">
+                30{language === 'ko' ? '초' : language === 'ja' ? '秒' : language === 'zh' ? '秒' : 's'}
+              </div>
+              <div className="text-gray-600">{t.stat3}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-16">
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              {t.featuresTitle}
+            </span>
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Marketing AI */}
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 hover:shadow-2xl transition-all">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mb-6">
+                <Zap className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">{t.marketingTitle}</h3>
+              <p className="text-gray-600 mb-6">{t.marketingDesc}</p>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-blue-600" />
+                  <span className="text-sm">{t.marketingFeature1}</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-blue-600" />
+                  <span className="text-sm">{t.marketingFeature2}</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-blue-600" />
+                  <span className="text-sm">{t.marketingFeature3}</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Design AI */}
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 hover:shadow-2xl transition-all">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center mb-6">
+                <Rocket className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">{t.designTitle}</h3>
+              <p className="text-gray-600 mb-6">{t.designDesc}</p>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-purple-600" />
+                  <span className="text-sm">{t.designFeature1}</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-purple-600" />
+                  <span className="text-sm">{t.designFeature2}</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-purple-600" />
+                  <span className="text-sm">{t.designFeature3}</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Developer AI */}
+            <div className="bg-gradient-to-br from-pink-50 to-red-50 rounded-2xl p-8 hover:shadow-2xl transition-all">
+              <div className="w-16 h-16 bg-gradient-to-br from-pink-600 to-red-600 rounded-xl flex items-center justify-center mb-6">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">{t.codeTitle}</h3>
+              <p className="text-gray-600 mb-6">{t.codeDesc}</p>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-pink-600" />
+                  <span className="text-sm">{t.codeFeature1}</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-pink-600" />
+                  <span className="text-sm">{t.codeFeature2}</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-pink-600" />
+                  <span className="text-sm">{t.codeFeature3}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">
+        <div className="max-w-4xl mx-auto text-center text-white">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            {t.ctaTitle}
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            {t.ctaSubtitle}
+          </p>
+          <Link
+            href="/playground"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-600 rounded-lg font-bold text-lg hover:shadow-2xl transition-all"
+          >
+            {t.ctaButton}
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-400 py-12 px-6">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">AI</span>
+            </div>
+            <span className="text-white font-bold text-xl">AIWorkground</span>
+          </div>
+          <p className="text-sm">{t.footer}</p>
+        </div>
+      </footer>
+    </div>
+  )
+}
