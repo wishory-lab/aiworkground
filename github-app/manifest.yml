@@ -1,0 +1,43 @@
+# GitHub App Manifest for WorkflowAI
+name: "WorkflowAI"
+description: "AI-powered development assistant for code review, documentation, and automation"
+url: "https://workflowai.dev"
+hook_attributes:
+  url: "https://api.workflowai.dev/webhooks/github"
+  active: true
+redirect_url: "https://workflowai.dev/auth/github/callback"
+setup_url: "https://workflowai.dev/setup/github"
+public: true
+default_events:
+  - "pull_request"
+  - "push"
+  - "issues"
+  - "issue_comment"
+  - "pull_request_review"
+default_permissions:
+  contents: "read"
+  issues: "write"
+  pull_requests: "write"
+  metadata: "read"
+  repository_projects: "read"
+  actions: "read"
+request_oauth_on_install: true
+setup_on_update: true
+
+# Features
+features:
+  code_review:
+    description: "AI-powered code review with security, performance, and best practice suggestions"
+    permissions: ["contents:read", "pull_requests:write"]
+  
+  auto_documentation:
+    description: "Automatic API documentation generation and README updates"
+    permissions: ["contents:write"]
+  
+  bug_detection:
+    description: "Intelligent bug detection and fix suggestions"
+    permissions: ["issues:write"]
+  
+  testing_assistant:
+    description: "Auto-generate unit tests and test coverage analysis"
+    permissions: ["actions:read", "contents:write"]

@@ -1,0 +1,106 @@
+// Slack Bot Manifest for WorkflowAI
+{
+  "display_information": {
+    "name": "WorkflowAI Assistant",
+    "description": "AI-powered assistant for marketing, design, and development tasks",
+    "background_color": "#2c3e50",
+    "long_description": "WorkflowAI brings the power of AI to your team workflows. Generate content, create designs, review code, and automate tasks - all within Slack!"
+  },
+  "features": {
+    "app_home": {
+      "home_tab_enabled": true,
+      "messages_tab_enabled": true,
+      "messages_tab_read_only_enabled": false
+    },
+    "bot_user": {
+      "display_name": "WorkflowAI",
+      "always_online": true
+    },
+    "slash_commands": [
+      {
+        "command": "/wai-content",
+        "description": "Generate marketing content with AI",
+        "usage_hint": "blog post about AI productivity",
+        "should_escape": false
+      },
+      {
+        "command": "/wai-design",
+        "description": "Create designs and images with AI",
+        "usage_hint": "logo for tech startup",
+        "should_escape": false
+      },
+      {
+        "command": "/wai-code",
+        "description": "Get code review and development help",
+        "usage_hint": "review this Python function",
+        "should_escape": false
+      },
+      {
+        "command": "/wai-task",
+        "description": "Create and manage tasks with AI assistance",
+        "usage_hint": "plan project timeline",
+        "should_escape": false
+      }
+    ],
+    "unfurl_domains": [
+      "workflowai.dev"
+    ]
+  },
+  "oauth_config": {
+    "redirect_urls": [
+      "https://api.workflowai.dev/auth/slack/callback"
+    ],
+    "scopes": {
+      "user": [
+        "channels:history",
+        "groups:history",
+        "im:history",
+        "mpim:history",
+        "files:read"
+      ],
+      "bot": [
+        "app_mentions:read",
+        "channels:history",
+        "channels:read",
+        "chat:write",
+        "commands",
+        "files:read",
+        "files:write",
+        "groups:history",
+        "groups:read",
+        "im:history",
+        "im:read",
+        "im:write",
+        "mpim:history",
+        "mpim:read",
+        "mpim:write",
+        "reactions:read",
+        "reactions:write",
+        "team:read",
+        "users:read",
+        "workflow.steps:execute"
+      ]
+    }
+  },
+  "settings": {
+    "event_subscriptions": {
+      "request_url": "https://api.workflowai.dev/webhooks/slack",
+      "bot_events": [
+        "app_mention",
+        "message.channels",
+        "message.groups",
+        "message.im",
+        "message.mpim",
+        "reaction_added",
+        "reaction_removed"
+      ]
+    },
+    "interactivity": {
+      "is_enabled": true,
+      "request_url": "https://api.workflowai.dev/interactive/slack"
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false,
+    "token_rotation_enabled": false
+  }
+}

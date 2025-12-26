@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>WorkflowAI Designer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #333;
+            background: #fff;
+        }
+        
+        .container {
+            padding: 16px;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+        
+        .title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .subtitle {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .tab-nav {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px 16px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .tab:hover {
+            background: #f8f9fa;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .input, .textarea, .select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: border-color 0.2s ease;
+        }
+        
+        .input:focus, .textarea:focus, .select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .button:hover {
+            background: #5a6fd8;
+        }
+        
+        .button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .button.secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .button.secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .color-swatch {
+            width: 100%;
+            height: 40px;
+            border-radius: 4px;
+            border: 2px solid #e5e5e5;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .color-swatch:hover {
+            border-color: #667eea;
+        }
+        
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .platform-card {
+            padding: 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .platform-card:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .platform-card.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .platform-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .platform-size {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e5e5e5;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .result {
+            display: none;
+            margin-top: 16px;
+            padding: 12px;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result.success {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+            color: #065f46;
+        }
+        
+        .result.error {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+        
+        .settings-note {
+            font-size: 12px;
+            color: #666;
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+        
+        .help-text {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin: 16px 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .feature-list li:before {
+            content: "✨";
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">W</div>
+            <div>
+                <div class="title">WorkflowAI Designer</div>
+                <div class="subtitle">AI-powered design tools</div>
+            </div>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <div class="tab active" data-tab="generate">Generate</div>
+            <div class="tab" data-tab="colors">Colors</div>
+            <div class="tab" data-tab="optimize">Optimize</div>
+            <div class="tab" data-tab="settings">Settings</div>
+        </div>
+        
+        <!-- Generate Tab -->
+        <div class="tab-content active" id="generate">
+            <div class="form-group">
+                <label class="label">Image Prompt</label>
+                <textarea class="textarea" id="imagePrompt" placeholder="Describe the image you want to generate..."></textarea>
+                <div class="help-text">Be specific and descriptive for best results</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Style</label>
+                <select class="select" id="imageStyle">
+                    <option value="photorealistic">Photorealistic</option>
+                    <option value="illustration">Illustration</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="abstract">Abstract</option>
+                    <option value="logo">Logo Style</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Dimensions</label>
+                <select class="select" id="imageDimensions">
+                    <option value="1024x1024">Square (1024×1024)</option>
+                    <option value="1024x1792">Portrait (1024×1792)</option>
+                    <option value="1792x1024">Landscape (1792×1024)</option>
+                </select>
+            </div>
+            
+            <button class="button" id="generateBtn">Generate Image</button>
+            
+            <div class="platform-grid">
+                <div class="platform-card" data-platform="instagram" data-type="post">
+                    <div class="platform-name">Instagram Post</div>
+                    <div class="platform-size">1080×1080</div>
+                </div>
+                <div class="platform-card" data-platform="instagram" data-type="story">
+                    <div class="platform-name">Instagram Story</div>
+                    <div class="platform-size">1080×1920</div>
+                </div>
+                <div class="platform-card" data-platform="facebook" data-type="post">
+                    <div class="platform-name">Facebook Post</div>
+                    <div class="platform-size">1200×630</div>
+                </div>
+                <div class="platform-card" data-platform="twitter" data-type="post">
+                    <div class="platform-name">Twitter Post</div>
+                    <div class="platform-size">1200×675</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Colors Tab -->
+        <div class="tab-content" id="colors">
+            <div class="form-group">
+                <label class="label">Base Color</label>
+                <input type="color" class="input" id="baseColor" value="#667eea">
+                <div class="help-text">Choose a starting color for your palette</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Palette Type</label>
+                <select class="select" id="paletteType">
+                    <option value="complementary">Complementary</option>
+                    <option value="analogous">Analogous</option>
+                    <option value="monochromatic">Monochromatic</option>
+                    <option value="triadic">Triadic</option>
+                    <option value="tetradic">Tetradic</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Number of Colors</label>
+                <select class="select" id="numColors">
+                    <option value="3">3 Colors</option>
+                    <option value="5" selected>5 Colors</option>
+                    <option value="8">8 Colors</option>
+                    <option value="10">10 Colors</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Mood</label>
+                <select class="select" id="colorMood">
+                    <option value="vibrant">Vibrant</option>
+                    <option value="muted">Muted</option>
+                    <option value="pastel">Pastel</option>
+                    <option value="dark">Dark</option>
+                    <option value="bright">Bright</option>
+                </select>
+            </div>
+            
+            <button class="button" id="createPaletteBtn">Create Palette</button>
+            
+            <div class="color-grid" id="colorGrid"></div>
+            
+            <button class="button secondary" id="applyBrandColorsBtn" style="margin-top: 12px;">Apply to Selection</button>
+        </div>
+        
+        <!-- Optimize Tab -->
+        <div class="tab-content" id="optimize">
+            <div class="form-group">
+                <label class="label">Target Audience</label>
+                <input class="input" id="targetAudience" placeholder="e.g., young professionals, teenagers">
+                <div class="help-text">Describe your target audience for better optimization</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Design Goals</label>
+                <input class="input" id="designGoals" placeholder="e.g., conversion, engagement, brand awareness">
+                <div class="help-text">What do you want to achieve with this design?</div>
+            </div>
+            
+            <button class="button" id="analyzeBtn">Analyze Selection</button>
+            <button class="button secondary" id="optimizeBtn" style="margin-top: 8px;">Optimize Layout</button>
+            
+            <div class="platform-grid">
+                <div class="platform-card" data-resize="instagram-post">
+                    <div class="platform-name">Instagram</div>
+                    <div class="platform-size">Resize for feed</div>
+                </div>
+                <div class="platform-card" data-resize="facebook-post">
+                    <div class="platform-name">Facebook</div>
+                    <div class="platform-size">Resize for post</div>
+                </div>
+                <div class="platform-card" data-resize="twitter-post">
+                    <div class="platform-name">Twitter</div>
+                    <div class="platform-size">Resize for tweet</div>
+                </div>
+                <div class="platform-card" data-resize="linkedin-post">
+                    <div class="platform-name">LinkedIn</div>
+                    <div class="platform-size">Resize for post</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settings">
+            <div class="settings-note">
+                Get your API key from your WorkflowAI dashboard to unlock all features.
+            </div>
+            
+            <div class="form-group">
+                <label class="label">API Key</label>
+                <input type="password" class="input" id="apiKey" placeholder="Enter your WorkflowAI API key">
+                <div class="help-text">Your API key is stored locally and never shared</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Brand ID (Optional)</label>
+                <input class="input" id="brandId" placeholder="Your brand identifier">
+                <div class="help-text">Link to your brand settings for consistent styling</div>
+            </div>
+            
+            <button class="button" id="saveSettingsBtn">Save Settings</button>
+            
+            <ul class="feature-list">
+                <li>AI-powered image generation</li>
+                <li>Smart color palette creation</li>
+                <li>Layout optimization suggestions</li>
+                <li>Platform-specific resizing</li>
+                <li>Brand consistency checking</li>
+            </ul>
+        </div>
+        
+        <!-- Loading State -->
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <div id="loadingMessage">Processing...</div>
+        </div>
+        
+        <!-- Results -->
+        <div class="result" id="result">
+            <div id="resultMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let settings = {};
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+        
+        // Platform card selection
+        document.querySelectorAll('.platform-card').forEach(card => {
+            card.addEventListener('click', () => {
+                // Remove selected class from siblings
+                card.parentNode.querySelectorAll('.platform-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                
+                // Handle platform-specific actions
+                if (card.dataset.platform && card.dataset.type) {
+                    // Set dimensions for generation
+                    const platformSizes = {
+                        'instagram-post': '1024x1024',
+                        'instagram-story': '1024x1792',
+                        'facebook-post': '1200x630',
+                        'twitter-post': '1200x675'
+                    };
+                    const sizeKey = `${card.dataset.platform}-${card.dataset.type}`;
+                    const size = platformSizes[sizeKey];
+                    if (size) {
+                        document.getElementById('imageDimensions').value = size;
+                    }
+                } else if (card.dataset.resize) {
+                    // Handle resize action
+                    const [platform, type] = card.dataset.resize.split('-');
+                    parent.postMessage({
+                        pluginMessage: {
+                            type: 'resize-for-platform',
+                            platform: platform,
+                            contentType: type
+                        }
+                    }, '*');
+                }
+            });
+        });
+        
+        // Generate image
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            const prompt = document.getElementById('imagePrompt').value.trim();
+            if (!prompt) {
+                showResult('Please enter an image prompt', 'error');
+                return;
+            }
+            
+            showLoading('Generating image...');
+            
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'generate-image',
+                    prompt: prompt,
+                    style: document.getElementById('imageStyle').value,
+                    dimensions: document.getElementById('imageDimensions').value,
+                    brandId: settings.brandId
+                }
+            }, '*');
+        });
+        
+        // Create color palette
+        document.getElementById('createPaletteBtn').addEventListener('click', () => {
+            showLoading('Creating color palette...');
+            
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'create-color-palette',
+                    baseColor: document.getElementById('baseColor').value,
+                    paletteType: document.getElementById('paletteType').value,
+                    numColors: parseInt(document.getElementById('numColors').value),
+                    mood: document.getElementById('colorMood').value
+                }
+            }, '*');
+        });
+        
+        // Apply brand colors
+        document.getElementById('applyBrandColorsBtn').addEventListener('click', () => {
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'apply-brand-colors',
+                    brandId: settings.brandId || 'default'
+                }
+            }, '*');
+        });
+        
+        // Analyze selection
+        document.getElementById('analyzeBtn').addEventListener('click', () => {
+            showLoading('Analyzing selection...');
+            
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'analyze-selection'
+                }
+            }, '*');
+        });
+        
+        // Optimize layout
+        document.getElementById('optimizeBtn').addEventListener('click', () => {
+            const targetAudience = document.getElementById('targetAudience').value.trim();
+            const goals = document.getElementById('designGoals').value.trim().split(',').map(g => g.trim()).filter(g => g);
+            
+            showLoading('Optimizing layout...');
+            
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'optimize-layout',
+                    targetAudience: targetAudience || 'general',
+                    goals: goals.length > 0 ? goals : ['usability']
+                }
+            }, '*');
+        });
+        
+        // Save settings
+        document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const brandId = document.getElementById('brandId').value.trim();
+            
+            if (!apiKey) {
+                showResult('Please enter your API key', 'error');
+                return;
+            }
+            
+            settings = { apiKey, brandId };
+            
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'save-settings',
+                    settings: settings
+                }
+            }, '*');
+        });
+        
+        // Utility functions
+        function showLoading(message) {
+            document.getElementById('loadingMessage').textContent = message;
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('result').classList.remove('show');
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('show');
+        }
+        
+        function showResult(message, type = 'success') {
+            hideLoading();
+            document.getElementById('resultMessage').textContent = message;
+            document.getElementById('result').className = `result show ${type}`;
+        }
+        
+        function displayColorPalette(colors) {
+            const colorGrid = document.getElementById('colorGrid');
+            colorGrid.innerHTML = '';
+            
+            colors.forEach((color, index) => {
+                const swatch = document.createElement('div');
+                swatch.className = 'color-swatch';
+                swatch.style.backgroundColor = color;
+                swatch.textContent = color;
+                swatch.title = `Color ${index + 1}: ${color}`;
+                
+                swatch.addEventListener('click', () => {
+                    navigator.clipboard.writeText(color).then(() => {
+                        showResult(`Copied ${color} to clipboard`, 'success');
+                    });
+                });
+                
+                colorGrid.appendChild(swatch);
+            });
+        }
+        
+        // Message handler for plugin communication
+        window.onmessage = (event) => {
+            const { type, message, settings: loadedSettings, colors, analysis } = event.data.pluginMessage || {};
+            
+            switch (type) {
+                case 'settings-loaded':
+                    settings = loadedSettings || {};
+                    if (settings.apiKey) {
+                        document.getElementById('apiKey').value = settings.apiKey;
+                    }
+                    if (settings.brandId) {
+                        document.getElementById('brandId').value = settings.brandId;
+                    }
+                    break;
+                    
+                case 'settings-saved':
+                    showResult(message, 'success');
+                    break;
+                    
+                case 'image-generated':
+                    showResult(message, 'success');
+                    break;
+                    
+                case 'palette-created':
+                    showResult(message, 'success');
+                    if (colors && colors.length > 0) {
+                        displayColorPalette(colors);
+                    }
+                    break;
+                    
+                case 'brand-colors-applied':
+                    showResult(message, 'success');
+                    break;
+                    
+                case 'analysis-complete':
+                    showResult('Analysis complete! Check the console for details.', 'success');
+                    if (analysis) {
+                        console.log('Design Analysis:', analysis);
+                    }
+                    break;
+                    
+                case 'layout-analyzed':
+                    showResult(message, 'success');
+                    break;
+                    
+                case 'resized-for-platform':
+                    showResult(message, 'success');
+                    break;
+                    
+                case 'loading':
+                    showLoading(message);
+                    break;
+                    
+                case 'error':
+                    showResult(message, 'error');
+                    break;
+                    
+                default:
+                    console.log('Unhandled message:', type, message);
+            }
+        };
+        
+        // Initialize
+        console.log('WorkflowAI Designer Plugin Loaded');
+    </script>
+</body>
+</html>

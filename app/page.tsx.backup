@@ -1,0 +1,163 @@
+﻿'use client'
+
+import Link from 'next/link'
+import { ArrowRight, Sparkles, Zap, Rocket } from 'lucide-react'
+
+export default function HomePage() {
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-20 sm:py-32">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            {/* Badge */}
+            <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-blue-600 shadow-md">
+              <Sparkles className="h-4 w-4" />
+              일하면서 놀자! 🎪
+            </div>
+
+            {/* Main Title */}
+            <h1 className="mb-6 text-5xl font-extrabold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl">
+              <span className="block">AI로 일하고</span>
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                놀이터처럼 즐기세요
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="mx-auto mb-10 max-w-2xl text-lg text-gray-600 sm:text-xl">
+              마케팅 · 디자인 · 개발을 하나의 플랫폼에서.
+              <br />
+              <strong>AIWorkground</strong>는 당신의 AI 생산성 플레이그라운드입니다.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-3 text-base font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-xl"
+              >
+                무료로 시작하기
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+              <Link
+                href="#features"
+                className="inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-8 py-3 text-base font-semibold text-gray-700 transition-all hover:border-blue-500 hover:text-blue-600"
+              >
+                데모 보기
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Decorative Elements */}
+        <div className="absolute left-1/2 top-0 -z-10 -translate-x-1/2 blur-3xl opacity-30">
+          <div className="h-[600px] w-[600px] rounded-full bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400" />
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-20 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
+              3가지 AI 도구, 하나의 플랫폼
+            </h2>
+            <p className="text-xl text-gray-600">
+              마케팅, 디자인, 개발 팀을 위한 올인원 솔루션
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {/* Marketing AI */}
+            <div className="rounded-2xl border-2 border-blue-100 bg-gradient-to-br from-blue-50 to-white p-8 transition-all hover:border-blue-300 hover:shadow-xl">
+              <div className="mb-4 inline-flex rounded-lg bg-blue-100 p-3">
+                <Zap className="h-6 w-6 text-blue-600" />
+              </div>
+              <h3 className="mb-3 text-2xl font-bold text-gray-900">Marketing AI</h3>
+              <p className="mb-4 text-gray-600">
+                콘텐츠를 1분 만에 생성하고 자동화
+              </p>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li>✅ AI 콘텐츠 생성</li>
+                <li>✅ SNS 자동 포스팅</li>
+                <li>✅ 트렌드 분석</li>
+              </ul>
+            </div>
+
+            {/* Design AI */}
+            <div className="rounded-2xl border-2 border-purple-100 bg-gradient-to-br from-purple-50 to-white p-8 transition-all hover:border-purple-300 hover:shadow-xl">
+              <div className="mb-4 inline-flex rounded-lg bg-purple-100 p-3">
+                <Sparkles className="h-6 w-6 text-purple-600" />
+              </div>
+              <h3 className="mb-3 text-2xl font-bold text-gray-900">Design AI</h3>
+              <p className="mb-4 text-gray-600">
+                디자인을 30초 만에 완성
+              </p>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li>✅ Figma 플러그인</li>
+                <li>✅ AI 디자인 제안</li>
+                <li>✅ 실시간 협업</li>
+              </ul>
+            </div>
+
+            {/* Developer AI */}
+            <div className="rounded-2xl border-2 border-orange-100 bg-gradient-to-br from-orange-50 to-white p-8 transition-all hover:border-orange-300 hover:shadow-xl">
+              <div className="mb-4 inline-flex rounded-lg bg-orange-100 p-3">
+                <Rocket className="h-6 w-6 text-orange-600" />
+              </div>
+              <h3 className="mb-3 text-2xl font-bold text-gray-900">Developer AI</h3>
+              <p className="mb-4 text-gray-600">
+                코드 리뷰와 문서화를 즉시 처리
+              </p>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li>✅ GitHub App 통합</li>
+                <li>✅ 자동 코드 리뷰</li>
+                <li>✅ PR 자동화</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-20 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-8 md:grid-cols-3 text-center">
+            <div>
+              <div className="text-5xl font-extrabold text-blue-600 mb-2">300%</div>
+              <div className="text-gray-600">생산성 향상</div>
+            </div>
+            <div>
+              <div className="text-5xl font-extrabold text-purple-600 mb-2">1분</div>
+              <div className="text-gray-600">콘텐츠 생성</div>
+            </div>
+            <div>
+              <div className="text-5xl font-extrabold text-pink-600 mb-2">30초</div>
+              <div className="text-gray-600">디자인 완성</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-extrabold text-gray-900 mb-6">
+            지금 바로 시작하세요
+          </h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            무료 플랜으로 AIWorkground의 모든 기능을 체험해보세요
+          </p>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-xl"
+          >
+            무료로 시작하기
+            <ArrowRight className="h-6 w-6" />
+          </Link>
+        </div>
+      </section>
+    </div>
+  )
+}
