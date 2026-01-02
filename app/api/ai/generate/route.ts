@@ -122,15 +122,19 @@ SEO最適化されたキーワードを含め、明確なCTAを設定します�
     console.log('AI generation successful, length:', generatedContent.length)
 
     // Supabase에서 사용자 프로필 조회 또는 생성
-    let profile = await supabaseAdmin
+    let profileId: string | null = null
+    
+    const profileResult = await supabaseAdmin
       .from('profiles')
       .select('id')
       .eq('clerk_user_id', user.id)
       .single()
 
-    if (!profile.data) {
+    if (profileResult.data) {
+      profileId = profileResult.data.id
+    } else {
       console.log('Creating new profile for user:', user.id)
-      const newProfile = await supabaseAdmin
+      const newProfileResult = await supabaseAdmin
         .from('profiles')
         .insert({
           clerk_user_id: user.id,
@@ -141,13 +145,15 @@ SEO最適化されたキーワードを含め、明確なCTAを設定します�
         .select('id')
         .single()
 
-      profile = newProfile
+      if (newProfileResult.data) {
+        profileId = newProfileResult.data.id
+      }
     }
 
     // Supabase에 저장
-    if (profile.data) {
+    if (profileId) {
       await supabaseAdmin.from('ai_contents').insert({
-        user_id: profile.data.id,
+        user_id: profileId,
         project_id: projectId || null,
         type,
         content: {
