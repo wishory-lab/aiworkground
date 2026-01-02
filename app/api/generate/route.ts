@@ -75,12 +75,14 @@ export async function POST(req: NextRequest) {
       model: 'gpt-4'
     })
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Generate API Error:', error)
     
     // 에러 발생 시 데모 모드로 폴백
     try {
-      const body = await req.json()
+      // 요청 본문을 다시 읽기 위해 클론 필요 (이미 읽었을 수 있음)
+      const clonedReq = req.clone()
+      const body = await clonedReq.json().catch(() => ({ category: '글쓰기', prompt: '' }))
       return getDemoResponse(body.category || '글쓰기', body.prompt || '')
     } catch (parseError) {
       // JSON 파싱 실패 시 기본 데모 응답
