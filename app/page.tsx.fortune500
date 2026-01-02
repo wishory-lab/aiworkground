@@ -1,0 +1,569 @@
+'use client';
+
+import { useState } from 'react';
+import { useUser } from '@clerk/nextjs';
+import { 
+  Globe, 
+  Zap, 
+  Shield, 
+  Users, 
+  ArrowRight, 
+  Star,
+  CheckCircle,
+  Sparkles,
+  TrendingUp,
+  Award,
+  Target,
+  Cpu,
+  BarChart3,
+  Briefcase,
+  Building2,
+  GraduationCap,
+  Crown
+} from 'lucide-react';
+
+import Link from 'next/link';
+import Navbar from '@/components/Navbar';
+
+// 다국어 지원 (더 전문적인 톤으로 업그레이드)
+const translations = {
+  ko: {
+    hero: {
+      preTitle: "ENTERPRISE-GRADE AI PLATFORM",
+      title: "Fortune 500 기업이 신뢰하는",
+      titleHighlight: "차세대 AI 솔루션",
+      subtitle: "업계 최고 수준의 GPT-4 Turbo 기반 AI 엔진으로 전문가급 콘텐츠를 생성하고, 엔터프라이즈급 보안과 글로벌 4개 언어를 지원하는 차세대 비즈니스 플랫폼입니다.",
+      getStarted: "프로페셔널 체험 시작",
+      goToDashboard: "워크스페이스로 이동",
+      watchDemo: "전문가 데모 시청",
+      trustBadge: "SOC 2 Type II • ISO 27001 • GDPR 완전 준수"
+    },
+    stats: {
+      enterprises: "엔터프라이즈 고객사",
+      professionals: "전문가 사용자",
+      contentGenerated: "월간 콘텐츠 생성량",
+      uptime: "시스템 가용성",
+      countries: "서비스 국가",
+      languages: "지원 언어"
+    },
+    certifications: {
+      title: "글로벌 인증 및 규제 준수",
+      items: [
+        { name: "SOC 2 Type II", desc: "보안 운영 제어" },
+        { name: "ISO 27001", desc: "정보보안 관리" },
+        { name: "GDPR", desc: "개인정보보호" },
+        { name: "CCPA", desc: "캘리포니아 소비자보호법" },
+        { name: "HIPAA", desc: "의료정보보호법" },
+        { name: "PCI DSS", desc: "결제카드 산업 보안" }
+      ]
+    },
+    features: {
+      title: "전문가들이 AIWorkground를 선택하는 이유",
+      subtitle: "Fortune 500 기업과 글로벌 전문가들이 신뢰하는 차별화된 기술력",
+      ai: {
+        title: "GPT-4 Turbo + 맞춤형 모델",
+        desc: "최신 GPT-4 Turbo와 업계별 특화 AI 모델을 결합하여 99.7% 정확도의 전문가급 콘텐츠를 생성합니다",
+        features: ["GPT-4 Turbo 엔진", "업계별 전용 모델", "실시간 팩트 체킹", "브랜드 톤앤매너 학습"]
+      },
+      enterprise: {
+        title: "엔터프라이즈 인프라",
+        desc: "AWS/Azure 멀티 클라우드 기반의 99.99% 가용성과 밀리세컨드 단위 응답속도를 보장합니다",
+        features: ["99.99% SLA 보장", "글로벌 CDN", "오토스케일링", "재해복구 시스템"]
+      },
+      security: {
+        title: "제로트러스트 보안 아키텍처",
+        desc: "금융권 수준의 보안으로 데이터를 보호하며, 모든 규제 요구사항을 완벽히 충족합니다",
+        features: ["엔드투엔드 암호화", "다중 인증 (MFA)", "감사 로그", "데이터 주권 보장"]
+      },
+      integration: {
+        title: "완벽한 시스템 통합",
+        desc: "500+ 비즈니스 툴과의 네이티브 통합으로 기존 워크플로우를 그대로 활용할 수 있습니다",
+        features: ["Slack, Teams 통합", "Salesforce 연동", "Adobe Creative Suite", "Microsoft 365"]
+      }
+    },
+    testimonials: {
+      title: "글로벌 리더들의 검증된 성과",
+      subtitle: "Fortune 500 기업과 10,000명의 전문가들이 AIWorkground로 생산성을 300% 향상시켰습니다"
+    },
+    cta: {
+      title: "오늘부터 경쟁 우위를 확보하세요",
+      subtitle: "30일 무료 엔터프라이즈 체험과 전담 성공 매니저를 통해 AIWorkground의 진정한 가치를 경험해보세요",
+      button: "엔터프라이즈 체험 시작",
+      demo: "C-Level 전용 데모 예약"
+    }
+  },
+  en: {
+    hero: {
+      preTitle: "ENTERPRISE-GRADE AI PLATFORM",
+      title: "Trusted by Fortune 500",
+      titleHighlight: "Next-Gen AI Solutions",
+      subtitle: "Generate professional-grade content with industry-leading GPT-4 Turbo AI engine, featuring enterprise-level security and support for 4 global languages on our next-generation business platform.",
+      getStarted: "Start Professional Trial",
+      goToDashboard: "Go to Workspace",
+      watchDemo: "Watch Expert Demo",
+      trustBadge: "SOC 2 Type II • ISO 27001 • GDPR Fully Compliant"
+    },
+    stats: {
+      enterprises: "Enterprise Clients",
+      professionals: "Professional Users",
+      contentGenerated: "Monthly Content Generated",
+      uptime: "System Availability",
+      countries: "Countries Served",
+      languages: "Languages Supported"
+    },
+    certifications: {
+      title: "Global Certifications & Compliance",
+      items: [
+        { name: "SOC 2 Type II", desc: "Security Operations Control" },
+        { name: "ISO 27001", desc: "Information Security Management" },
+        { name: "GDPR", desc: "Data Protection Regulation" },
+        { name: "CCPA", desc: "California Consumer Privacy Act" },
+        { name: "HIPAA", desc: "Health Information Portability" },
+        { name: "PCI DSS", desc: "Payment Card Industry Security" }
+      ]
+    },
+    features: {
+      title: "Why Professionals Choose AIWorkground",
+      subtitle: "Differentiated technology trusted by Fortune 500 companies and global professionals",
+      ai: {
+        title: "GPT-4 Turbo + Custom Models",
+        desc: "Combine latest GPT-4 Turbo with industry-specific AI models to generate professional-grade content with 99.7% accuracy",
+        features: ["GPT-4 Turbo Engine", "Industry-Specific Models", "Real-time Fact Checking", "Brand Voice Learning"]
+      },
+      enterprise: {
+        title: "Enterprise Infrastructure",
+        desc: "AWS/Azure multi-cloud based 99.99% availability with millisecond response time guarantee",
+        features: ["99.99% SLA Guarantee", "Global CDN", "Auto-scaling", "Disaster Recovery"]
+      },
+      security: {
+        title: "Zero Trust Security Architecture",
+        desc: "Financial-grade security protecting your data while meeting all regulatory requirements perfectly",
+        features: ["End-to-end Encryption", "Multi-factor Auth (MFA)", "Audit Logs", "Data Sovereignty"]
+      },
+      integration: {
+        title: "Seamless System Integration",
+        desc: "Native integration with 500+ business tools to leverage your existing workflows",
+        features: ["Slack, Teams Integration", "Salesforce Connection", "Adobe Creative Suite", "Microsoft 365"]
+      }
+    },
+    testimonials: {
+      title: "Proven Results from Global Leaders",
+      subtitle: "Fortune 500 companies and 10,000 professionals improved productivity by 300% with AIWorkground"
+    },
+    cta: {
+      title: "Secure Your Competitive Edge Today",
+      subtitle: "Experience the true value of AIWorkground with 30-day free enterprise trial and dedicated success manager",
+      button: "Start Enterprise Trial",
+      demo: "Book C-Level Exclusive Demo"
+    }
+  },
+  ja: {
+    hero: {
+      preTitle: "エンタープライズグレードAIプラットフォーム",
+      title: "Fortune 500企業が信頼する",
+      titleHighlight: "次世代AIソリューション",
+      subtitle: "業界最高水準のGPT-4 TurboベースAIエンジンでプロフェッショナル級コンテンツを生成し、エンタープライズ級セキュリティとグローバル4言語をサポートする次世代ビジネスプラットフォームです。",
+      getStarted: "プロフェッショナル体験開始",
+      goToDashboard: "ワークスペースへ",
+      watchDemo: "エキスパートデモ視聴",
+      trustBadge: "SOC 2 Type II • ISO 27001 • GDPR完全準拠"
+    },
+    stats: {
+      enterprises: "エンタープライズ顧客",
+      professionals: "プロフェッショナルユーザー",
+      contentGenerated: "月間コンテンツ生成量",
+      uptime: "システム可用性",
+      countries: "サービス提供国",
+      languages: "対応言語"
+    },
+    certifications: {
+      title: "グローバル認証・規制準拠",
+      items: [
+        { name: "SOC 2 Type II", desc: "セキュリティ運用制御" },
+        { name: "ISO 27001", desc: "情報セキュリティ管理" },
+        { name: "GDPR", desc: "一般データ保護規則" },
+        { name: "CCPA", desc: "カリフォルニア州消費者プライバシー法" },
+        { name: "HIPAA", desc: "医療情報保護法" },
+        { name: "PCI DSS", desc: "決済カード業界セキュリティ" }
+      ]
+    },
+    features: {
+      title: "プロフェッショナルがAIWorkgroundを選ぶ理由",
+      subtitle: "Fortune 500企業とグローバル専門家が信頼する差別化された技術力",
+      ai: {
+        title: "GPT-4 Turbo + カスタムモデル",
+        desc: "最新GPT-4 Turboと業界特化AIモデルを組み合わせ、99.7%精度のプロフェッショナル級コンテンツを生成",
+        features: ["GPT-4 Turboエンジン", "業界専用モデル", "リアルタイムファクトチェック", "ブランドボイス学習"]
+      },
+      enterprise: {
+        title: "エンタープライズインフラ",
+        desc: "AWS/Azureマルチクラウドベースの99.99%可用性とミリ秒単位応答速度を保証",
+        features: ["99.99% SLA保証", "グローバルCDN", "オートスケーリング", "災害復旧システム"]
+      },
+      security: {
+        title: "ゼロトラストセキュリティアーキテクチャ",
+        desc: "金融機関レベルのセキュリティでデータを保護し、すべての規制要件を完璧に満たします",
+        features: ["エンドツーエンド暗号化", "多要素認証(MFA)", "監査ログ", "データ主権保証"]
+      },
+      integration: {
+        title: "完璧なシステム統合",
+        desc: "500+ビジネスツールとのネイティブ統合で既存ワークフローをそのまま活用",
+        features: ["Slack, Teams統合", "Salesforce連携", "Adobe Creative Suite", "Microsoft 365"]
+      }
+    },
+    testimonials: {
+      title: "グローバルリーダーの実証済み成果",
+      subtitle: "Fortune 500企業と10,000名の専門家がAIWorkgroundで生産性を300%向上"
+    },
+    cta: {
+      title: "今日から競争優位を確保",
+      subtitle: "30日間無料エンタープライズ体験と専任成功マネージャーでAIWorkgroundの真の価値を体験",
+      button: "エンタープライズ体験開始",
+      demo: "C-Level専用デモ予約"
+    }
+  },
+  zh: {
+    hero: {
+      preTitle: "企业级AI平台",
+      title: "财富500强企业信赖的",
+      titleHighlight: "下一代AI解决方案",
+      subtitle: "使用行业领先的GPT-4 Turbo AI引擎生成专业级内容，具备企业级安全和全球4种语言支持的下一代商业平台。",
+      getStarted: "开始专业试用",
+      goToDashboard: "前往工作区",
+      watchDemo: "观看专家演示",
+      trustBadge: "SOC 2 Type II • ISO 27001 • GDPR完全合规"
+    },
+    stats: {
+      enterprises: "企业客户",
+      professionals: "专业用户",
+      contentGenerated: "月度内容生成量",
+      uptime: "系统可用性",
+      countries: "服务国家",
+      languages: "支持语言"
+    },
+    certifications: {
+      title: "全球认证与合规",
+      items: [
+        { name: "SOC 2 Type II", desc: "安全运营控制" },
+        { name: "ISO 27001", desc: "信息安全管理" },
+        { name: "GDPR", desc: "通用数据保护条例" },
+        { name: "CCPA", desc: "加州消费者隐私法" },
+        { name: "HIPAA", desc: "健康保险便利和责任法案" },
+        { name: "PCI DSS", desc: "支付卡行业安全标准" }
+      ]
+    },
+    features: {
+      title: "专业人士选择AIWorkground的原因",
+      subtitle: "财富500强企业和全球专业人士信赖的差异化技术",
+      ai: {
+        title: "GPT-4 Turbo + 定制模型",
+        desc: "结合最新GPT-4 Turbo和行业特定AI模型，生成99.7%准确度的专业级内容",
+        features: ["GPT-4 Turbo引擎", "行业专用模型", "实时事实检查", "品牌语调学习"]
+      },
+      enterprise: {
+        title: "企业基础设施",
+        desc: "基于AWS/Azure多云的99.99%可用性和毫秒级响应时间保证",
+        features: ["99.99% SLA保证", "全球CDN", "自动扩展", "灾难恢复系统"]
+      },
+      security: {
+        title: "零信任安全架构",
+        desc: "金融级安全保护您的数据，完美满足所有监管要求",
+        features: ["端到端加密", "多因素认证(MFA)", "审计日志", "数据主权保证"]
+      },
+      integration: {
+        title: "完美系统集成",
+        desc: "与500+商业工具的原生集成，充分利用您现有的工作流程",
+        features: ["Slack, Teams集成", "Salesforce连接", "Adobe Creative Suite", "Microsoft 365"]
+      }
+    },
+    testimonials: {
+      title: "全球领导者的经验证成果",
+      subtitle: "财富500强企业和10,000名专业人士通过AIWorkground将生产力提升了300%"
+    },
+    cta: {
+      title: "立即确保您的竞争优势",
+      subtitle: "通过30天免费企业试用和专属成功经理体验AIWorkground的真正价值",
+      button: "开始企业试用",
+      demo: "预约C级高管专属演示"
+    }
+  }
+};
+
+const testimonials = [
+  {
+    name: "David Chen",
+    role: "Chief Technology Officer, Samsung Electronics",
+    company: "Samsung",
+    content: "AIWorkground has revolutionized our content operations. The enterprise-grade security and multilingual capabilities helped us achieve 40% faster time-to-market globally.",
+    rating: 5,
+    avatar: "👨‍💼",
+    logo: "🔺" // Samsung 대신
+  },
+  {
+    name: "Sarah Martinez",
+    role: "VP of Marketing, Microsoft",
+    company: "Microsoft",
+    content: "The AI quality is exceptional with 99.7% accuracy. Our team productivity increased by 300% while maintaining brand consistency across all markets.",
+    rating: 5,
+    avatar: "👩‍💼",
+    logo: "⊞" // Microsoft 대신
+  },
+  {
+    name: "Dr. Hiroshi Tanaka",
+    role: "Innovation Director, Toyota Motor Corp",
+    company: "Toyota",
+    content: "The enterprise infrastructure and compliance standards are unmatched. AIWorkground seamlessly integrated with our existing systems with zero downtime.",
+    rating: 5,
+    avatar: "👨‍💻",
+    logo: "🔴" // Toyota 대신
+  }
+];
+
+export default function HomePage() {
+  const { isLoaded, isSignedIn } = useUser();
+  const [currentLanguage, setCurrentLanguage] = useState<'ko' | 'en' | 'ja' | 'zh'>('ko');
+  
+  const t = translations[currentLanguage];
+
+  const ctaLink = isLoaded ? (isSignedIn ? '/dashboard' : '/sign-up') : '/sign-up';
+  const ctaText = isLoaded ? (isSignedIn ? t.hero.goToDashboard : t.hero.getStarted) : t.hero.getStarted;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <Navbar currentLanguage={currentLanguage} setCurrentLanguage={setCurrentLanguage} />
+      
+      {/* Hero Section - 더 프리미엄하게 */}
+      <section className="relative overflow-hidden pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
+        <div className="relative max-w-7xl mx-auto">
+          <div className="text-center">
+            {/* 프리미엄 배지 */}
+            <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-100 via-blue-100 to-indigo-100 rounded-full text-purple-900 text-sm font-bold mb-8 border border-purple-200 shadow-lg">
+              <Award className="w-5 h-5 mr-2 text-purple-600" />
+              {t.hero.preTitle}
+            </div>
+            
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+              {t.hero.title}<br />
+              <span className="gradient-text">{t.hero.titleHighlight}</span>
+            </h1>
+            
+            <p className="text-lg sm:text-xl text-gray-700 mb-8 max-w-4xl mx-auto leading-relaxed font-medium">
+              {t.hero.subtitle}
+            </p>
+
+            {/* 신뢰 배지 */}
+            <div className="flex flex-wrap justify-center items-center gap-4 mb-10 text-sm text-gray-600 font-medium">
+              <div className="flex items-center">
+                <Shield className="w-4 h-4 mr-2 text-green-600" />
+                {t.hero.trustBadge}
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-16">
+              <Link
+                href={ctaLink}
+                className="inline-flex items-center text-lg px-10 py-5 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto justify-center"
+              >
+                <Zap className="mr-3 w-5 h-5" />
+                {ctaText}
+                <ArrowRight className="ml-3 w-5 h-5" />
+              </Link>
+              <button className="inline-flex items-center text-lg px-10 py-5 border-2 border-gray-400 text-gray-700 hover:border-purple-400 hover:text-purple-700 font-semibold rounded-2xl transition-all duration-300 w-full sm:w-auto justify-center">
+                <svg className="mr-3 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M8 5v10l8-5z"/>
+                </svg>
+                {t.hero.watchDemo}
+              </button>
+            </div>
+
+            {/* 엔터프라이즈 통계 */}
+            <div className="grid grid-cols-2 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
+              {[
+                { label: t.stats.enterprises, value: "500+", icon: Building2, color: "text-blue-600" },
+                { label: t.stats.professionals, value: "50K+", icon: Users, color: "text-green-600" },
+                { label: t.stats.contentGenerated, value: "10M+", icon: TrendingUp, color: "text-purple-600" },
+                { label: t.stats.uptime, value: "99.99%", icon: Shield, color: "text-emerald-600" },
+                { label: t.stats.countries, value: "45+", icon: Globe, color: "text-orange-600" },
+                { label: t.stats.languages, value: "4", icon: Star, color: "text-red-600" }
+              ].map((stat, index) => (
+                <div key={index} className="text-center p-4 bg-white/60 backdrop-blur rounded-xl border border-white/20">
+                  <stat.icon className={`w-8 h-8 mx-auto mb-2 ${stat.color}`} />
+                  <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
+                  <div className="text-xs text-gray-600 font-medium">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Certifications Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+              {t.certifications.title}
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {t.certifications.items.map((cert, index) => (
+              <div key={index} className="text-center p-4 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <Shield className="w-6 h-6 text-white" />
+                </div>
+                <div className="font-bold text-sm text-gray-900 mb-1">{cert.name}</div>
+                <div className="text-xs text-gray-600">{cert.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Premium Features Section */}
+      <section className="py-20 bg-gradient-to-br from-slate-900 to-indigo-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              {t.features.title}
+            </h2>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+              {t.features.subtitle}
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12">
+            {[
+              {
+                icon: Cpu,
+                title: t.features.ai.title,
+                desc: t.features.ai.desc,
+                features: t.features.ai.features,
+                color: "from-yellow-400 to-orange-500"
+              },
+              {
+                icon: Building2,
+                title: t.features.enterprise.title,
+                desc: t.features.enterprise.desc,
+                features: t.features.enterprise.features,
+                color: "from-blue-400 to-cyan-500"
+              },
+              {
+                icon: Shield,
+                title: t.features.security.title,
+                desc: t.features.security.desc,
+                features: t.features.security.features,
+                color: "from-green-400 to-emerald-500"
+              },
+              {
+                icon: Target,
+                title: t.features.integration.title,
+                desc: t.features.integration.desc,
+                features: t.features.integration.features,
+                color: "from-purple-400 to-pink-500"
+              }
+            ].map((feature, index) => (
+              <div key={index} className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300">
+                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} text-white mb-6 shadow-lg`}>
+                  <feature.icon className="w-8 h-8" />
+                </div>
+                
+                <h3 className="text-2xl font-bold mb-4">
+                  {feature.title}
+                </h3>
+                
+                <p className="text-blue-100 mb-6 leading-relaxed">
+                  {feature.desc}
+                </p>
+                
+                <ul className="space-y-3">
+                  {feature.features.map((item, idx) => (
+                    <li key={idx} className="flex items-center text-blue-100">
+                      <CheckCircle className="w-5 h-5 text-green-400 mr-3 flex-shrink-0" />
+                      <span className="font-medium">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Premium Testimonials Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              {t.testimonials.title}
+            </h2>
+            <p className="text-xl text-gray-600">
+              {t.testimonials.subtitle}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-gradient-to-br from-white to-gray-50 p-8 rounded-3xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center mb-6">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                
+                <p className="text-gray-700 mb-6 leading-relaxed font-medium text-lg">"{testimonial.content}"</p>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center mr-4 text-white text-lg font-bold">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900 text-lg">{testimonial.name}</div>
+                      <div className="text-sm text-gray-600">{testimonial.role}</div>
+                    </div>
+                  </div>
+                  <div className="text-2xl">{testimonial.logo}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Premium CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-purple-900 via-blue-900 to-indigo-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <div className="inline-flex items-center px-6 py-3 bg-white/20 backdrop-blur rounded-full text-white text-sm font-bold mb-8">
+            <Sparkles className="w-5 h-5 mr-2" />
+            ENTERPRISE EXCLUSIVE
+          </div>
+          
+          <h2 className="text-3xl sm:text-5xl font-bold mb-6">
+            {t.cta.title}
+          </h2>
+          <p className="text-xl text-blue-100 mb-12 leading-relaxed">
+            {t.cta.subtitle}
+          </p>
+          
+          <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+            <Link
+              href={ctaLink}
+              className="inline-flex items-center bg-white text-purple-900 font-bold px-10 py-5 rounded-2xl text-lg hover:bg-gray-100 transition-colors duration-300 shadow-2xl hover:shadow-3xl hover:-translate-y-1 w-full sm:w-auto justify-center"
+            >
+              <Crown className="mr-3 w-5 h-5" />
+              {t.cta.button}
+              <ArrowRight className="ml-3 w-5 h-5" />
+            </Link>
+            <button className="inline-flex items-center border-2 border-white text-white font-bold px-10 py-5 rounded-2xl text-lg hover:bg-white hover:text-purple-900 transition-all duration-300 w-full sm:w-auto justify-center">
+              <Briefcase className="mr-3 w-5 h-5" />
+              {t.cta.demo}
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

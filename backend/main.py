@@ -17,6 +17,10 @@ import jwt
 from cryptography.hazmat.primitives import serialization
 import logging
 
+# Logging setup (must be before any logger usage)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 # Environment variables
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
@@ -24,16 +28,31 @@ CLERK_SECRET_KEY = os.getenv("CLERK_SECRET_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+
+# Validate required environment variables
+required_vars = {
+    "SUPABASE_URL": SUPABASE_URL,
+    "SUPABASE_SERVICE_KEY": SUPABASE_SERVICE_KEY,
+    "CLERK_SECRET_KEY": CLERK_SECRET_KEY,
+    "OPENAI_API_KEY": OPENAI_API_KEY,
+}
+
+missing_vars = [var for var, value in required_vars.items() if not value]
+if missing_vars:
+    logger.warning(f"Missing environment variables: {', '.join(missing_vars)}")
+    if ENVIRONMENT == "production":
+        raise ValueError(f"Required environment variables missing: {', '.join(missing_vars)}")
 
 # Initialize Supabase client
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+if SUPABASE_URL and SUPABASE_SERVICE_KEY:
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+else:
+    supabase = None
+    logger.warning("Supabase client not initialized - missing credentials")
 
 # Security
 security = HTTPBearer()
-
-# Logging setup
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -116,12 +135,18 @@ async def get_current_user(payload: dict = Depends(verify_token)):
     if not clerk_id:
         raise HTTPException(status_code=401, detail="Invalid token payload")
     
-    # Get user from database
-    result = supabase.table('users').select('*').eq('clerk_id', clerk_id).single().execute()
-    if not result.data:
-        raise HTTPException(status_code=404, detail="User not found")
+    if not supabase:
+        raise HTTPException(status_code=503, detail="Database not available")
     
-    return result.data
+    # Get user from database
+    try:
+        result = supabase.table('users').select('*').eq('clerk_id', clerk_id).single().execute()
+        if not result.data:
+            raise HTTPException(status_code=404, detail="User not found")
+        return result.data
+    except Exception as e:
+        logger.error(f"Error fetching user: {str(e)}")
+        raise HTTPException(status_code=500, detail="Database error")
 
 # Health Check
 @app.get("/health")
