@@ -130,7 +130,7 @@ SEO最適化されたキーワードを含め、明確なCTAを設定します�
 
     if (!profile.data) {
       console.log('Creating new profile for user:', user.id)
-      const { data: newProfile } = await supabaseAdmin
+      const newProfile = await supabaseAdmin
         .from('profiles')
         .insert({
           clerk_user_id: user.id,
@@ -141,7 +141,7 @@ SEO最適化されたキーワードを含め、明確なCTAを設定します�
         .select('id')
         .single()
 
-      profile.data = newProfile
+      profile = newProfile
     }
 
     // Supabase에 저장
